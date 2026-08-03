@@ -33,6 +33,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import com.infinity8.mini_compose.extension.height
+import com.infinity8.mini_compose.extension.padding
 import com.infinity8.mini_compose.node.ButtonStyle
 import com.infinity8.mini_compose.runtime.MiniCompose
 import com.infinity8.mini_compose.widget.Button
@@ -143,12 +145,11 @@ class MainActivity : ComponentActivity() {
                 MiniCompose {
                     Button(
                         text = "Login",
-                        width = 320.dp,
-                        height = 56.dp,
+                        modifier = com.infinity8.mini_compose.modifier.Modifier
+                            .fillMaxWidth().height(56.dp).padding(horizontal = 64.dp),
                         backgroundColor = "#2962FF".toColorInt(),
                         cornerRadius = 16.dp,
                         elevation = 8.dp,
-                        buttonAlignment = alignment.Center
                     )
                 }
 
@@ -158,14 +159,13 @@ class MainActivity : ComponentActivity() {
                 MiniCompose {
                     Button(
                         text = "Create Account",
-                        width = 320.dp,
-                        height = 56.dp,
+                        modifier = com.infinity8.mini_compose.modifier.Modifier
+                            .fillMaxWidth().height(56.dp).padding(horizontal = 32.dp),
                         style = ButtonStyle.Outlined,
                         borderWidth = 2.dp,
                         borderColor = "#2962FF".toColorInt(),
                         textColor = "#2962FF".toColorInt(),
                         cornerRadius = 16.dp,
-                        buttonAlignment = alignment.Center
                     )
                 }
 
