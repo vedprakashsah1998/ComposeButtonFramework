@@ -6,18 +6,20 @@ import android.graphics.Paint
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
+import com.infinity8.mini_compose.extension.resolvePadding
+import com.infinity8.mini_compose.extension.resolveSize
 
 import com.infinity8.mini_compose.layout.Constraints
 import com.infinity8.mini_compose.layout.MeasureResult
 import com.infinity8.mini_compose.layout.PaddingValues
+import com.infinity8.mini_compose.modifier.Modifier
+import com.infinity8.mini_compose.modifier.ModifierChain
+import com.infinity8.mini_compose.modifier.SizeValue
 import com.infinity8.mini_compose.ui.unit.toPx
 
 class ButtonNode(
     var text: String,
-
-    var widthValue: Dp = 0.dp,
-    var heightValue: Dp = 0.dp,
-
+     val modifier: ModifierChain = Modifier,
     var backgroundColor: Int = Color.BLACK,
     var textColor: Int = Color.WHITE,
 
@@ -37,7 +39,6 @@ class ButtonNode(
     val disabledBorderColor: Int = "#C7C7CC".toColorInt(),
     val disabledTextColor: Int = "#8E8E93".toColorInt(),
     val contentAlignment: Alignment = Alignment.Center,
-    val buttonAlignment: Alignment = Alignment.Start,
 
     var onClick: () -> Unit = {}
 ) : LayoutNode() {
@@ -95,23 +96,53 @@ class ButtonNode(
         constraints: Constraints
     ): MeasureResult {
 
+        val size = modifier.resolveSize()
+        val outerPadding = modifier.resolvePadding()
+
         val childResult = textNode.measure(constraints)
+        val buttonWidth =
+            childResult.width +
+                    contentPadding.start.toPx() +
+                    contentPadding.end.toPx()
 
-        width =
-            if (widthValue.value > 0f)
-                widthValue.toPx()
-            else
-                childResult.width +
-                        contentPadding.start.toPx() +
-                        contentPadding.end.toPx()
+        val buttonHeight =
+            childResult.height +
+                    contentPadding.top.toPx() +
+                    contentPadding.bottom.toPx()
+        width = when (val value = size.width) {
 
-        height =
-            if (heightValue.value > 0f)
-                heightValue.toPx()
-            else
-                childResult.height +
-                        contentPadding.top.toPx() +
-                        contentPadding.bottom.toPx()
+            is SizeValue.Fixed ->
+                value.dp.toPx()
+
+            SizeValue.FillMax ->
+                constraints.maxWidth
+
+            is SizeValue.FillFraction ->
+                constraints.maxWidth * value.fraction
+
+            SizeValue.WrapContent, null ->
+                buttonWidth +
+                        outerPadding.start.toPx() +
+                        outerPadding.end.toPx()
+        }
+
+        height = when (val value = size.height) {
+
+            is SizeValue.Fixed ->
+                value.dp.toPx()
+
+            SizeValue.FillMax ->
+                constraints.maxHeight
+
+            is SizeValue.FillFraction ->
+                constraints.maxHeight * value.fraction
+
+            SizeValue.WrapContent, null ->
+                buttonHeight +
+                        outerPadding.top.toPx() +
+                        outerPadding.bottom.toPx()
+        }
+
 
         return MeasureResult(width, height)
     }
@@ -120,34 +151,59 @@ class ButtonNode(
     override fun layout() {
 
         val child = textNode
+        val outerPadding = modifier.resolvePadding()
 
-        child.x = (width - child.width) / 2f
-        child.y = (height - child.height) / 2f
+        val buttonX = x + outerPadding.start.toPx()
+        val buttonY = y + outerPadding.top.toPx()
+        val buttonWidth =
+            width -
+                    outerPadding.start.toPx() -
+                    outerPadding.end.toPx()
+
+        val buttonHeight =
+            height -
+                    outerPadding.top.toPx() -
+                    outerPadding.bottom.toPx()
+
         when (contentAlignment) {
 
             Alignment.Start -> {
-                child.x = x + contentPadding.start.toPx()
+                child.x = buttonX + contentPadding.start.toPx()
             }
 
             Alignment.Center -> {
-                child.x = x + (width - child.width) / 2f
+                child.x = buttonX + (buttonWidth - child.width) / 2f
             }
 
             Alignment.End -> {
-                child.x = x +
-                        width -
-                        child.width -
-                        contentPadding.end.toPx()
+                child.x =
+                    buttonX +
+                            buttonWidth -
+                            child.width -
+                            contentPadding.end.toPx()
             }
         }
 
-        child.y = y + (height - child.height) / 2f
-
+        child.y = buttonY + (buttonHeight - child.height) / 2f
         child.layout()
     }
 
     override fun draw(canvas: Canvas) {
         val elevationPx = elevation.toPx()
+        val outerPadding = modifier.resolvePadding()
+
+        val buttonX = x + outerPadding.start.toPx()
+        val buttonY = y + outerPadding.top.toPx()
+
+        val buttonWidth =
+            width -
+                    outerPadding.start.toPx() -
+                    outerPadding.end.toPx()
+
+        val buttonHeight =
+            height -
+                    outerPadding.top.toPx() -
+                    outerPadding.bottom.toPx()
         textNode.textColor =
             if (enabled)
                 textColor
@@ -177,10 +233,10 @@ class ButtonNode(
             )
 
             canvas.drawRoundRect(
-                x,
-                y,
-                x + width,
-                y + height,
+                buttonX,
+                buttonY,
+                buttonX + buttonWidth,
+                buttonY + buttonHeight,
                 cornerRadius.toPx(),
                 cornerRadius.toPx(),
                 shadowPaint
@@ -213,10 +269,10 @@ class ButtonNode(
         backgroundPaint.alpha =
             (255 * currentAlpha).toInt()
         canvas.drawRoundRect(
-            x,
-            y,
-            x + width,
-            y + height,
+            buttonX,
+            buttonY,
+            buttonX + buttonWidth,
+            buttonY + buttonHeight,
             cornerRadius.toPx(),
             cornerRadius.toPx(),
             backgroundPaint
