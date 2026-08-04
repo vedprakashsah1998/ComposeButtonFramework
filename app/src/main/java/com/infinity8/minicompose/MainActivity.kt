@@ -33,12 +33,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
-import com.infinity8.mini_compose.extension.height
-import com.infinity8.mini_compose.extension.padding
-import com.infinity8.mini_compose.node.ButtonStyle
-import com.infinity8.mini_compose.runtime.MiniCompose
-import com.infinity8.mini_compose.widget.Button
-import com.infinity8.mini_compose.node.Alignment as alignment
+import com.infinity8.compose_button_framework.extension.height
+import com.infinity8.compose_button_framework.extension.padding
+import com.infinity8.compose_button_framework.node.ButtonStyle
+import com.infinity8.compose_button_framework.runtime.MiniCompose
+import com.infinity8.compose_button_framework.widget.Button
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -145,7 +144,7 @@ class MainActivity : ComponentActivity() {
                 MiniCompose {
                     Button(
                         text = "Login",
-                        modifier = com.infinity8.mini_compose.modifier.Modifier
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
                             .fillMaxWidth().height(56.dp).padding(horizontal = 64.dp),
                         backgroundColor = "#2962FF".toColorInt(),
                         cornerRadius = 16.dp,
@@ -159,7 +158,7 @@ class MainActivity : ComponentActivity() {
                 MiniCompose {
                     Button(
                         text = "Create Account",
-                        modifier = com.infinity8.mini_compose.modifier.Modifier
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
                             .fillMaxWidth().height(56.dp).padding(horizontal = 32.dp),
                         style = ButtonStyle.Outlined,
                         borderWidth = 2.dp,

@@ -24,4 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MiniCompose"
 include(":app")
-include(":mini-compose")
+include(":compose-button-framework")
