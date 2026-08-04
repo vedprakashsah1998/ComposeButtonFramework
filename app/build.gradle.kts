@@ -54,7 +54,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.compose.material.icons.extended)
-
-    implementation(project(":mini-compose"))
-
+    implementation(project(":compose-button-framework"))
+//    implementation("com.infinity8.composebuttonframework:compose-button-framework:1.0.0")
 }
