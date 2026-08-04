@@ -172,7 +172,7 @@ MiniCompose's own engine, and stitched back into Compose through `AndroidView`.
 
 ### Add the module
 
-The library lives in the `:mini-compose` Gradle module. Include it in your app:
+The library lives in the `:compose-button-framework` Gradle module. Include it in your app:
 
 ```kotlin
 // app/setting.gradle.kts
