@@ -186,7 +186,7 @@ The library lives in the `:compose-button-framework` Gradle module. Include it i
 
 //app/build.gradle.kts
 dependencies {
-	        implementation 'com.github.vedprakashsah1998:ComposeButtonFramework:Tag'
+	        implementation 'com.github.vedprakashsah1998:ComposeButtonFramework:1.0.0'
 	}
 ```
 
