@@ -175,10 +175,19 @@ MiniCompose's own engine, and stitched back into Compose through `AndroidView`.
 The library lives in the `:mini-compose` Gradle module. Include it in your app:
 
 ```kotlin
-// app/build.gradle.kts
+// app/setting.gradle.kts
+	dependencyResolutionManagement {
+		repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+		repositories {
+			mavenCentral()
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+//app/build.gradle.kts
 dependencies {
-    implementation(project(":mini-compose"))
-}
+	        implementation 'com.github.vedprakashsah1998:ComposeButtonFramework:Tag'
+	}
 ```
 
 ### Basic button
@@ -273,6 +282,8 @@ By building a native button framework from scratch, this project makes those int
 - Kotlin
 
 ---
+
+
 
 ## 📄 License
 
