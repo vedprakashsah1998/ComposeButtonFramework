@@ -1,5 +1,6 @@
 package com.infinity8.minicompose
 
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,13 +29,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
-
+import com.infinity8.compose_button_framework.FontFamily
+import com.infinity8.compose_button_framework.extension.height
+import com.infinity8.compose_button_framework.extension.padding
+import com.infinity8.compose_button_framework.node.ButtonStyle
+import com.infinity8.compose_button_framework.runtime.MiniCompose
+import com.infinity8.compose_button_framework.widget.Button
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
