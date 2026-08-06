@@ -1,5 +1,6 @@
 package com.infinity8.minicompose
 
+import android.graphics.Typeface
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,11 +29,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import com.infinity8.compose_button_framework.FontFamily
 import com.infinity8.compose_button_framework.extension.height
 import com.infinity8.compose_button_framework.extension.padding
 import com.infinity8.compose_button_framework.node.ButtonStyle
@@ -148,7 +153,10 @@ class MainActivity : ComponentActivity() {
                             .fillMaxWidth().height(56.dp).padding(horizontal = 64.dp),
                         backgroundColor = "#2962FF".toColorInt(),
                         cornerRadius = 16.dp,
+                        textColor = com.infinity8.compose_button_framework.node.colorResource(R.color.black),
                         elevation = 8.dp,
+                        fontFamily = FontFamily.Resource(R.font.tccc_unitytext_bold),
+                        fontWeight = com.infinity8.compose_button_framework.FontWeight.Bold
                     )
                 }
 

@@ -6,6 +6,10 @@ import android.graphics.Paint
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
+import com.infinity8.compose_button_framework.FontFamily
+import com.infinity8.compose_button_framework.FontWeight
+import com.infinity8.compose_button_framework.TextOverflow
+import com.infinity8.compose_button_framework.TextTransform
 import com.infinity8.compose_button_framework.extension.resolvePadding
 import com.infinity8.compose_button_framework.extension.resolveSize
 
@@ -15,11 +19,13 @@ import com.infinity8.compose_button_framework.layout.PaddingValues
 import com.infinity8.compose_button_framework.modifier.Modifier
 import com.infinity8.compose_button_framework.modifier.ModifierChain
 import com.infinity8.compose_button_framework.modifier.SizeValue
+import com.infinity8.compose_button_framework.resource.FontFamilyResolver
+import com.infinity8.compose_button_framework.resource.FontStyle
 import com.infinity8.compose_button_framework.ui.unit.toPx
 
 class ButtonNode(
     var text: String,
-     val modifier: ModifierChain = Modifier,
+    val modifier: ModifierChain = Modifier,
     var backgroundColor: Int = Color.BLACK,
     var textColor: Int = Color.WHITE,
 
@@ -27,7 +33,7 @@ class ButtonNode(
     val contentPadding: PaddingValues = PaddingValues(),
 
     val cornerRadius: Dp = 16.dp,
-    val textSize: Dp = 16.dp,
+    var textSize: Dp = 16.dp,
 
     val elevation: Dp = 0.dp,
 
@@ -39,7 +45,17 @@ class ButtonNode(
     val disabledBorderColor: Int = "#C7C7CC".toColorInt(),
     val disabledTextColor: Int = "#8E8E93".toColorInt(),
     val contentAlignment: Alignment = Alignment.Center,
+    val fontResolver: FontFamilyResolver? = null,
 
+    var fontFamily: FontFamily = FontFamily.Default,
+    var fontStyle: FontStyle = FontStyle.Normal,
+    var fontWeight: FontWeight = FontWeight.Normal,
+
+    var maxLines: Int = Int.MAX_VALUE,
+
+    var overflow: TextOverflow = TextOverflow.Clip,
+
+    var textTransform: TextTransform = TextTransform.None,
     var onClick: () -> Unit = {}
 ) : LayoutNode() {
 
@@ -49,10 +65,32 @@ class ButtonNode(
 
     private var currentAlpha = 1f
     private val textNode = TextNode(
-        text,
+        text = text,
         textColor = textColor,
-        textSize = textSize
+        textSize = textSize,
+        fontFamily = fontFamily,
+        fontWeight = fontWeight,
+        fontResolver = fontResolver,
+        maxLines = maxLines,
+        overflow = overflow,
+        textTransform = textTransform
     )
+
+    private fun updateTextNode() {
+        textNode.textSize = textSize
+        textNode.text = text
+        textNode.textColor =
+            if (enabled) textColor else disabledTextColor
+
+        textNode.fontFamily = fontFamily
+        textNode.fontWeight = fontWeight
+        textNode.fontStyle = fontStyle
+        textNode.maxLines = maxLines
+        textNode.overflow = overflow
+        textNode.textTransform = textTransform
+        textNode.alpha = currentAlpha
+
+    }
     private val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
@@ -95,7 +133,7 @@ class ButtonNode(
     override fun measure(
         constraints: Constraints
     ): MeasureResult {
-
+        updateTextNode()
         val size = modifier.resolveSize()
         val outerPadding = modifier.resolvePadding()
 
@@ -204,13 +242,7 @@ class ButtonNode(
             height -
                     outerPadding.top.toPx() -
                     outerPadding.bottom.toPx()
-        textNode.textColor =
-            if (enabled)
-                textColor
-            else
-                disabledTextColor
 
-        textNode.alpha = currentAlpha
         if (elevationPx > 0f) {
 
             // Convert elevation into shadow properties
