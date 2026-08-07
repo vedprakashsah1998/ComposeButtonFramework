@@ -3,8 +3,6 @@ package com.infinity8.compose_button_framework.widget
 import android.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.retain.retain
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -12,7 +10,6 @@ import androidx.core.graphics.toColorInt
 import com.infinity8.compose_button_framework.FontFamily
 import com.infinity8.compose_button_framework.FontWeight
 import com.infinity8.compose_button_framework.TextOverflow
-import com.infinity8.compose_button_framework.TextTransform
 import com.infinity8.compose_button_framework.layout.PaddingValues
 import com.infinity8.compose_button_framework.modifier.Modifier
 import com.infinity8.compose_button_framework.modifier.ModifierChain
@@ -47,8 +44,7 @@ fun Button(
     fontStyle: FontStyle = FontStyle.Normal,
     maxLines: Int = Int.MAX_VALUE,
     overflow: TextOverflow = TextOverflow.Clip,
-    textTransform: TextTransform = TextTransform.None,
-
+    isUpperCase: Boolean = false,
     onClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -80,7 +76,7 @@ fun Button(
             fontStyle = fontStyle,
             maxLines = maxLines,
             overflow = overflow,
-            textTransform = textTransform,
+            isUpperCase = isUpperCase,
             onClick = onClick
         )
     )
