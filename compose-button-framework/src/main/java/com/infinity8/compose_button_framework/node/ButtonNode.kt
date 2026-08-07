@@ -9,7 +9,6 @@ import androidx.core.graphics.toColorInt
 import com.infinity8.compose_button_framework.FontFamily
 import com.infinity8.compose_button_framework.FontWeight
 import com.infinity8.compose_button_framework.TextOverflow
-import com.infinity8.compose_button_framework.TextTransform
 import com.infinity8.compose_button_framework.extension.resolvePadding
 import com.infinity8.compose_button_framework.extension.resolveSize
 
@@ -55,7 +54,7 @@ class ButtonNode(
 
     var overflow: TextOverflow = TextOverflow.Clip,
 
-    var textTransform: TextTransform = TextTransform.None,
+    var isUpperCase: Boolean = false,
     var onClick: () -> Unit = {}
 ) : LayoutNode() {
 
@@ -73,7 +72,7 @@ class ButtonNode(
         fontResolver = fontResolver,
         maxLines = maxLines,
         overflow = overflow,
-        textTransform = textTransform
+        isUpperCase = isUpperCase
     )
 
     private fun updateTextNode() {
@@ -87,10 +86,12 @@ class ButtonNode(
         textNode.fontStyle = fontStyle
         textNode.maxLines = maxLines
         textNode.overflow = overflow
-        textNode.textTransform = textTransform
+        textNode.isUpperCase = isUpperCase
         textNode.alpha = currentAlpha
+        textNode.textAlignment = contentAlignment
 
     }
+
     private val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
@@ -136,6 +137,16 @@ class ButtonNode(
         updateTextNode()
         val size = modifier.resolveSize()
         val outerPadding = modifier.resolvePadding()
+
+        val maxTextWidth = (
+                constraints.maxWidth
+                        - outerPadding.start.toPx()
+                        - outerPadding.end.toPx()
+                        - contentPadding.start.toPx()
+                        - contentPadding.end.toPx()
+                ).coerceAtLeast(0f)
+
+        textNode.availableWidth = maxTextWidth
 
         val childResult = textNode.measure(constraints)
         val buttonWidth =

@@ -18,14 +18,12 @@ enum class FontWeight {
 
 enum class TextOverflow {
     Clip,
-    Ellipsis
+    Ellipsis,
+    Visible,
+    StartEllipsis,
+    MiddleEllipsis
 }
 
-enum class TextTransform {
-    None,
-    Uppercase,
-    Lowercase
-}
 
 sealed class FontFamily {
 
