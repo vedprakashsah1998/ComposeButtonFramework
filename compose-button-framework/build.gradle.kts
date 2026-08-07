@@ -36,7 +36,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.vedprakashsah1998"
             artifactId = "compose-button-framework"
-            version = "1.0.1"
+            version = "1.0.3"
 
             afterEvaluate {
                 from(components["release"])
