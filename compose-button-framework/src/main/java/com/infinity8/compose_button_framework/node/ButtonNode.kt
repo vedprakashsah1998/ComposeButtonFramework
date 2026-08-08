@@ -1,8 +1,14 @@
 package com.infinity8.compose_button_framework.node
 
+import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Paint
+import android.graphics.RadialGradient
+import android.graphics.Shader
+import android.graphics.SweepGradient
+import android.view.animation.DecelerateInterpolator
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
@@ -11,6 +17,7 @@ import com.infinity8.compose_button_framework.FontWeight
 import com.infinity8.compose_button_framework.TextOverflow
 import com.infinity8.compose_button_framework.extension.resolvePadding
 import com.infinity8.compose_button_framework.extension.resolveSize
+import com.infinity8.compose_button_framework.gradient.ButtonGradient
 
 import com.infinity8.compose_button_framework.layout.Constraints
 import com.infinity8.compose_button_framework.layout.MeasureResult
@@ -45,6 +52,7 @@ class ButtonNode(
     val disabledTextColor: Int = "#8E8E93".toColorInt(),
     val contentAlignment: Alignment = Alignment.Center,
     val fontResolver: FontFamilyResolver? = null,
+    val gradient: ButtonGradient? = null,
 
     var fontFamily: FontFamily = FontFamily.Default,
     var fontStyle: FontStyle = FontStyle.Normal,
@@ -61,7 +69,7 @@ class ButtonNode(
     private var isPressed = false
 
     private var currentScale = 1f
-
+    private var pressAnimator: ValueAnimator? = null
     private var currentAlpha = 1f
     private val textNode = TextNode(
         text = text,
@@ -92,6 +100,114 @@ class ButtonNode(
 
     }
 
+    private fun animateTo(
+        targetScale: Float,
+        targetAlpha: Float,
+        duration: Long
+    ) {
+        pressAnimator?.cancel()
+
+        val startScale = currentScale
+        val startAlpha = currentAlpha
+
+        pressAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+
+            this.duration = duration
+
+            interpolator = DecelerateInterpolator()
+
+            addUpdateListener { animator ->
+
+                val progress = animator.animatedValue as Float
+
+                currentScale =
+                    startScale +
+                            (targetScale - startScale) * progress
+
+                currentAlpha =
+                    startAlpha +
+                            (targetAlpha - startAlpha) * progress
+
+                requestRedraw()
+            }
+
+            start()
+        }
+    }
+
+    private fun createGradientShader(
+        gradient: ButtonGradient,
+        buttonX: Float,
+        buttonY: Float,
+        buttonWidth: Float,
+        buttonHeight: Float
+    ): Shader {
+
+        return when (gradient) {
+
+            is ButtonGradient.Horizontal -> {
+
+                LinearGradient(
+                    buttonX + buttonWidth * gradient.startX,
+                    buttonY,
+                    buttonX + buttonWidth * gradient.endX,
+                    buttonY,
+                    gradient.colors.toIntArray(),
+                    null,
+                    Shader.TileMode.CLAMP
+                )
+            }
+
+            is ButtonGradient.Vertical -> {
+
+                LinearGradient(
+                    buttonX,
+                    buttonY + buttonHeight * gradient.startY,
+                    buttonX,
+                    buttonY + buttonHeight * gradient.endY,
+                    gradient.colors.toIntArray(),
+                    null,
+                    Shader.TileMode.CLAMP
+                )
+            }
+
+            is ButtonGradient.Diagonal -> {
+
+                LinearGradient(
+                    buttonX + buttonWidth * gradient.startX,
+                    buttonY + buttonHeight * gradient.startY,
+                    buttonX + buttonWidth * gradient.endX,
+                    buttonY + buttonHeight * gradient.endY,
+                    gradient.colors.toIntArray(),
+                    null,
+                    Shader.TileMode.CLAMP
+                )
+            }
+
+            is ButtonGradient.Radial -> {
+
+                RadialGradient(
+                    buttonX + buttonWidth * gradient.centerX,
+                    buttonY + buttonHeight * gradient.centerY,
+                    minOf(buttonWidth, buttonHeight) * gradient.radius,
+                    gradient.colors.toIntArray(),
+                    null,
+                    Shader.TileMode.CLAMP
+                )
+            }
+
+            is ButtonGradient.Sweep -> {
+
+                SweepGradient(
+                    buttonX + buttonWidth * gradient.centerX,
+                    buttonY + buttonHeight * gradient.centerY,
+                    gradient.colors.toIntArray(),
+                    null
+                )
+            }
+        }
+    }
+
     private val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
     }
@@ -104,13 +220,56 @@ class ButtonNode(
         style = Paint.Style.FILL
     }
 
+    override fun onTouchDown(
+        x: Float,
+        y: Float
+    ): Boolean {
+
+        if (!enabled) {
+            return false
+        }
+
+        onPress()
+
+        return true
+    }
+
+    override fun onTouchUp(
+        x: Float,
+        y: Float
+    ): Boolean {
+
+        if (!enabled) {
+            return false
+        }
+
+        onRelease()
+
+        return true
+    }
+
+    override fun onTouchCancel(): Boolean {
+
+        if (!enabled) {
+            return false
+        }
+
+        onCancel()
+
+        return true
+    }
+
     fun onPress() {
 
         if (!enabled) return
 
         isPressed = true
-        currentScale = 0.96f
-        currentAlpha = 0.85f
+
+        animateTo(
+            targetScale = 0.96f,
+            targetAlpha = 0.92f,
+            duration = 100L
+        )
     }
 
     fun onRelease() {
@@ -118,17 +277,27 @@ class ButtonNode(
         if (!enabled) return
 
         isPressed = false
-        currentScale = 1f
-        currentAlpha = 1f
+
+        animateTo(
+            targetScale = 1f,
+            targetAlpha = 1f,
+            duration = 160L
+        )
 
         onClick.invoke()
     }
 
     fun onCancel() {
 
+        if (!enabled) return
+
         isPressed = false
-        currentScale = 1f
-        currentAlpha = 1f
+
+        animateTo(
+            targetScale = 1f,
+            targetAlpha = 1f,
+            duration = 120L
+        )
     }
 
     override fun measure(
@@ -236,13 +405,28 @@ class ButtonNode(
         child.y = buttonY + (buttonHeight - child.height) / 2f
         child.layout()
     }
+    override fun findTouchTarget(
+        x: Float,
+        y: Float
+    ): LayoutNode? {
 
+        return if (
+            enabled &&
+            contains(x, y)
+        ) {
+            this
+        } else {
+            null
+        }
+    }
     override fun draw(canvas: Canvas) {
         val elevationPx = elevation.toPx()
         val outerPadding = modifier.resolvePadding()
 
         val buttonX = x + outerPadding.start.toPx()
         val buttonY = y + outerPadding.top.toPx()
+        canvas.save()
+
 
         val buttonWidth =
             width -
@@ -253,7 +437,14 @@ class ButtonNode(
             height -
                     outerPadding.top.toPx() -
                     outerPadding.bottom.toPx()
-
+        val centerX = buttonX + buttonWidth / 2f
+        val centerY = buttonY + buttonHeight / 2f
+        canvas.scale(
+            currentScale,
+            currentScale,
+            centerX,
+            centerY
+        )
         if (elevationPx > 0f) {
 
             // Convert elevation into shadow properties
@@ -292,11 +483,22 @@ class ButtonNode(
         when (style) {
             ButtonStyle.Filled -> {
                 backgroundPaint.style = Paint.Style.FILL
-                backgroundPaint.color =
-                    if (enabled)
-                        backgroundColor
-                    else
-                        disabledBackgroundColor
+                if (enabled && gradient != null) {
+                    backgroundPaint.shader = createGradientShader(
+                        gradient = gradient,
+                        buttonX = buttonX,
+                        buttonY = buttonY,
+                        buttonWidth = buttonWidth,
+                        buttonHeight = buttonHeight
+                    )
+                } else {
+                    backgroundPaint.shader = null
+                    backgroundPaint.color =
+                        if (enabled)
+                            backgroundColor
+                        else
+                            disabledBackgroundColor
+                }
             }
 
             ButtonStyle.Outlined -> {
@@ -309,8 +511,12 @@ class ButtonNode(
                         disabledBorderColor
             }
         }
+
         backgroundPaint.alpha =
-            (255 * currentAlpha).toInt()
+            (255 * currentAlpha)
+                .toInt()
+                .coerceIn(0, 255)
+
         canvas.drawRoundRect(
             buttonX,
             buttonY,
@@ -320,10 +526,11 @@ class ButtonNode(
             cornerRadius.toPx(),
             backgroundPaint
         )
-        backgroundPaint.clearShadowLayer()
+        textNode.alpha = currentAlpha
 
+        backgroundPaint.shader = null
         textNode.draw(canvas)
-
+        canvas.restore()
     }
 }
 

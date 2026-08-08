@@ -40,7 +40,9 @@ import com.infinity8.compose_button_framework.FontFamily
 import com.infinity8.compose_button_framework.TextOverflow
 import com.infinity8.compose_button_framework.extension.height
 import com.infinity8.compose_button_framework.extension.padding
+import com.infinity8.compose_button_framework.gradient.ButtonGradient
 import com.infinity8.compose_button_framework.node.ButtonStyle
+import com.infinity8.compose_button_framework.node.colorResource
 import com.infinity8.compose_button_framework.runtime.MiniCompose
 import com.infinity8.compose_button_framework.widget.Button
 
@@ -159,13 +161,15 @@ class MainActivity : ComponentActivity() {
                         textColor = com.infinity8.compose_button_framework.node.colorResource(R.color.black),
                         elevation = 8.dp,
                         fontFamily = FontFamily.Resource(R.font.tccc_unitytext_bold),
-                        fontWeight = com.infinity8.compose_button_framework.FontWeight.Bold
+                        fontWeight = com.infinity8.compose_button_framework.FontWeight.Bold,
+                        onClick = {}
+
                     )
                 }
 
 
                 Spacer(modifier = Modifier.height(16.dp))
-                
+
                 MiniCompose {
                     Button(
                         text = "Create Account",
@@ -176,6 +180,8 @@ class MainActivity : ComponentActivity() {
                         borderColor = "#2962FF".toColorInt(),
                         textColor = "#2962FF".toColorInt(),
                         cornerRadius = 16.dp,
+                        onClick = {}
+
                     )
                 }
 
@@ -196,7 +202,9 @@ class MainActivity : ComponentActivity() {
                         elevation = 6.dp,
                         fontFamily = FontFamily.Resource(R.font.tccc_unitytext_bold),
                         fontWeight = com.infinity8.compose_button_framework.FontWeight.Bold,
-                        isUpperCase = true
+                        isUpperCase = true,
+                        onClick = {}
+
                     )
                 }
 
@@ -214,7 +222,9 @@ class MainActivity : ComponentActivity() {
                         textColor = Color.White.toArgb(),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        contentAlignment = com.infinity8.compose_button_framework.node.Alignment.Center
+                        contentAlignment = com.infinity8.compose_button_framework.node.Alignment.Center,
+                        onClick = {}
+
                     )
                 }
 
@@ -232,7 +242,9 @@ class MainActivity : ComponentActivity() {
                         textColor = Color.White.toArgb(),
                         maxLines = 1,
                         overflow = TextOverflow.StartEllipsis,
-                        contentAlignment = com.infinity8.compose_button_framework.node.Alignment.Start
+                        contentAlignment = com.infinity8.compose_button_framework.node.Alignment.Start,
+                        onClick = {}
+
                     )
                 }
 
@@ -249,7 +261,9 @@ class MainActivity : ComponentActivity() {
                         backgroundColor = "#FF9800".toColorInt(),
                         textColor = Color.White.toArgb(),
                         maxLines = 1,
-                        overflow = TextOverflow.MiddleEllipsis
+                        overflow = TextOverflow.MiddleEllipsis,
+                        onClick = {}
+
                     )
                 }
 
@@ -266,7 +280,9 @@ class MainActivity : ComponentActivity() {
                         backgroundColor = "#E91E63".toColorInt(),
                         textColor = Color.White.toArgb(),
                         maxLines = 1,
-                        overflow = TextOverflow.Clip
+                        overflow = TextOverflow.Clip,
+                        onClick = {}
+
                     )
                 }
 
@@ -283,7 +299,9 @@ class MainActivity : ComponentActivity() {
                         backgroundColor = "#607D8B".toColorInt(),
                         textColor = Color.White.toArgb(),
                         maxLines = 1,
-                        overflow = TextOverflow.Visible
+                        overflow = TextOverflow.Visible,
+                        onClick = {}
+
                     )
                 }
 
@@ -302,7 +320,689 @@ class MainActivity : ComponentActivity() {
                         borderColor = "#3F51B5".toColorInt(),
                         textColor = "#3F51B5".toColorInt(),
                         contentAlignment = com.infinity8.compose_button_framework.node.Alignment.End,
-                        fontWeight = com.infinity8.compose_button_framework.FontWeight.Bold
+                        fontWeight = com.infinity8.compose_button_framework.FontWeight.Bold,
+                        onClick = {}
+
+                    )
+                }
+
+                // ============================================================
+// GRADIENT BUTTON EXAMPLES
+// ============================================================
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Text(
+                    text = "Gradient Buttons",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+
+// ------------------------------------------------------------
+// 1. HORIZONTAL GRADIENT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Horizontal Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Horizontal(
+                            colors = listOf(
+                                "#FF512F".toColorInt(),
+                                "#DD2476".toColorInt()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        fontWeight = com.infinity8.compose_button_framework.FontWeight.Bold,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 2. HORIZONTAL GRADIENT - THREE COLORS
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Three Color Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Horizontal(
+                            colors = listOf(
+                                "#FF6A00".toColorInt(),
+                                "#EE0979".toColorInt(),
+                                "#8E2DE2".toColorInt()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 3. VERTICAL GRADIENT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Vertical Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Vertical(
+                            colors = listOf(
+                                "#667EEA".toColorInt(),
+                                "#764BA2".toColorInt()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 4. VERTICAL GRADIENT - THREE COLORS
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Vertical Three Color",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Vertical(
+                            colors = listOf(
+                                "#00C6FF".toColorInt(),
+                                "#0072FF".toColorInt(),
+                                "#001F7A".toColorInt()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 5. DIAGONAL - TOP LEFT TO BOTTOM RIGHT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Diagonal Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Diagonal(
+                            colors = listOf(
+                                "#00C6FF".toColorInt(),
+                                "#0072FF".toColorInt()
+                            ),
+
+                            startX = 0f,
+                            startY = 0f,
+                            endX = 1f,
+                            endY = 1f
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 6. DIAGONAL - TOP RIGHT TO BOTTOM LEFT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Reverse Diagonal",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Diagonal(
+                            colors = listOf(
+                                "#F857A6".toColorInt(),
+                                "#FF5858".toColorInt()
+                            ),
+
+                            startX = 1f,
+                            startY = 0f,
+                            endX = 0f,
+                            endY = 1f
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 7. DIAGONAL - THREE COLORS
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Diagonal Three Color",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Diagonal(
+                            colors = listOf(
+                                "#FC466B".toColorInt(),
+                                "#3F5EFB".toColorInt(),
+                                "#00F2FE".toColorInt()
+                            ),
+
+                            startX = 0f,
+                            startY = 0f,
+                            endX = 1f,
+                            endY = 1f
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 8. RADIAL GRADIENT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Radial Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Radial(
+                            colors = listOf(
+                                "#FFD700".toColorInt(),
+                                "#FF8C00".toColorInt(),
+                                "#FF4500".toColorInt()
+                            ),
+
+                            centerX = 0.5f,
+                            centerY = 0.5f,
+                            radius = 1f
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 9. RADIAL - CENTER LEFT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Radial Left",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Radial(
+                            colors = listOf(
+                                "#FFFFFF".toColorInt(),
+                                "#00C6FF".toColorInt(),
+                                "#0072FF".toColorInt()
+                            ),
+
+                            centerX = 0.2f,
+                            centerY = 0.5f,
+                            radius = 1f
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 10. RADIAL - TOP LEFT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Radial Top Left",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Radial(
+                            colors = listOf(
+                                "#FFFFFF".toColorInt(),
+                                "#8E2DE2".toColorInt(),
+                                "#4A00E0".toColorInt()
+                            ),
+
+                            centerX = 0.15f,
+                            centerY = 0.15f,
+                            radius = 1f
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 11. SWEEP GRADIENT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Sweep Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Sweep(
+                            colors = listOf(
+                                "#FF0000".toColorInt(),
+                                "#FFFF00".toColorInt(),
+                                "#00FF00".toColorInt(),
+                                "#00FFFF".toColorInt(),
+                                "#0000FF".toColorInt(),
+                                "#FF00FF".toColorInt(),
+                                "#FF0000".toColorInt()
+                            ),
+
+                            centerX = 0.5f,
+                            centerY = 0.5f
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 12. SWEEP GRADIENT - TWO COLORS
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Sweep Two Color",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Sweep(
+                            colors = listOf(
+                                "#FF512F".toColorInt(),
+                                "#DD2476".toColorInt(),
+                                "#FF512F".toColorInt()
+                            ),
+
+                            centerX = 0.5f,
+                            centerY = 0.5f
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 13. RESOURCE COLORS - HORIZONTAL
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Resource Color Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Horizontal(
+                            colors = listOf(
+                                colorResource(R.color.gradient_start),
+                                colorResource(R.color.gradient_end)
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 14. RESOURCE COLORS - VERTICAL
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Resource Vertical Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Vertical(
+                            colors = listOf(
+                                colorResource(R.color.gradient_start),
+                                colorResource(R.color.gradient_end)
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 15. MIXED COLORS
+// Resource + Hex + Android Color
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Mixed Color Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Horizontal(
+                            colors = listOf(
+                                colorResource(R.color.gradient_start),
+                                "#673AB7".toColorInt(),
+                                Color.Red.toArgb()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 16.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 16. BLUE PREMIUM GRADIENT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Premium Blue",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Horizontal(
+                            colors = listOf(
+                                "#396AFB".toColorInt(),
+                                "#2948FF".toColorInt()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 14.dp,
+                        elevation = 8.dp,
+                        fontWeight = com.infinity8.compose_button_framework.FontWeight.Bold,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 17. PURPLE GRADIENT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Premium Purple",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Horizontal(
+                            colors = listOf(
+                                "#8E2DE2".toColorInt(),
+                                "#4A00E0".toColorInt()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 14.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 18. GREEN GRADIENT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Success",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Horizontal(
+                            colors = listOf(
+                                "#11998E".toColorInt(),
+                                "#38EF7D".toColorInt()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 14.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 19. ORANGE / RED GRADIENT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Warning",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Horizontal(
+                            colors = listOf(
+                                "#FF8008".toColorInt(),
+                                "#FFC837".toColorInt()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 14.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+// ------------------------------------------------------------
+// 20. PINK GRADIENT
+// ------------------------------------------------------------
+
+                MiniCompose {
+                    Button(
+                        text = "Pink Gradient",
+                        modifier = com.infinity8.compose_button_framework.modifier.Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .padding(horizontal = 32.dp),
+
+                        gradient = ButtonGradient.Horizontal(
+                            colors = listOf(
+                                "#FF416C".toColorInt(),
+                                "#FF4B2B".toColorInt()
+                            )
+                        ),
+
+                        textColor = Color.White.toArgb(),
+                        cornerRadius = 14.dp,
+                        elevation = 8.dp,
+                        onClick = {}
+
                     )
                 }
 
