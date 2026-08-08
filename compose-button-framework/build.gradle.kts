@@ -36,7 +36,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.vedprakashsah1998"
             artifactId = "compose-button-framework"
-            version = "1.0.3"
+            version = "1.0.4"
 
             afterEvaluate {
                 from(components["release"])
@@ -61,12 +61,23 @@ publishing {
 }
 dependencies {
     api(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.appcompat)
+
     api(libs.androidx.compose.runtime)
     api(libs.androidx.compose.ui)
+
+    implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
+
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
+
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+
+    androidTestImplementation(
+        libs.androidx.espresso.core
+    )
+
+    androidTestImplementation(
+        libs.androidx.junit
+    )
 }
