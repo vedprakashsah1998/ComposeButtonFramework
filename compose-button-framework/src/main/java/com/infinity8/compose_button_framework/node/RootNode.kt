@@ -6,7 +6,6 @@ import com.infinity8.compose_button_framework.layout.MeasureResult
 
 class RootNode : LayoutNode() {
 
-
     override fun measure(
         constraints: Constraints
     ): MeasureResult {
@@ -16,10 +15,16 @@ class RootNode : LayoutNode() {
 
         children.forEach { child ->
 
-            val result = child.measure(constraints)
+            val result = child.measure(
+                constraints
+            )
 
             totalHeight += result.height
-            maxWidth = maxOf(maxWidth, result.width)
+
+            maxWidth = maxOf(
+                maxWidth,
+                result.width
+            )
         }
 
         width = maxWidth
@@ -41,7 +46,10 @@ class RootNode : LayoutNode() {
         }
     }
 
-    override fun draw(canvas: Canvas) {
+    override fun draw(
+        canvas: Canvas
+    ) {
+
         children.forEach { child ->
             child.draw(canvas)
         }

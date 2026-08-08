@@ -10,6 +10,7 @@ import androidx.core.graphics.toColorInt
 import com.infinity8.compose_button_framework.FontFamily
 import com.infinity8.compose_button_framework.FontWeight
 import com.infinity8.compose_button_framework.TextOverflow
+import com.infinity8.compose_button_framework.gradient.ButtonGradient
 import com.infinity8.compose_button_framework.layout.PaddingValues
 import com.infinity8.compose_button_framework.modifier.Modifier
 import com.infinity8.compose_button_framework.modifier.ModifierChain
@@ -38,6 +39,7 @@ fun Button(
     disabledBorderColor: Int = "#C7C7CC".toColorInt(),
     disabledTextColor: Int = "#8E8E93".toColorInt(),
     contentAlignment: Alignment = Alignment.Center,
+    gradient: ButtonGradient? = null,
 
     fontFamily: FontFamily = FontFamily.Default,
     fontWeight: FontWeight = FontWeight.Normal,
@@ -71,6 +73,7 @@ fun Button(
             disabledTextColor = disabledTextColor,
             contentAlignment = contentAlignment,
             fontResolver = fontResolver,
+            gradient = gradient,
             fontFamily = fontFamily,
             fontWeight = fontWeight,
             fontStyle = fontStyle,
