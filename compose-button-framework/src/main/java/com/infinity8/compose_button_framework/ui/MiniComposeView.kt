@@ -22,6 +22,12 @@ class MiniComposeView @JvmOverloads constructor(
             canvas = canvas,
         )
     }
+    init {
+
+        renderer.setInvalidateCallback {
+            postInvalidateOnAnimation()
+        }
+    }
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(
         event: MotionEvent
@@ -54,13 +60,11 @@ class MiniComposeView @JvmOverloads constructor(
     }
 
     fun setRoot(root: RootNode) {
+
         renderer.setRoot(root)
 
-        root.setInvalidateCallback {
-            postInvalidateOnAnimation()
-        }
         requestLayout()
-        invalidate()
+        postInvalidateOnAnimation()
     }
 
     override fun onMeasure(

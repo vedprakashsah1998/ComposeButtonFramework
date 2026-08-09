@@ -1,6 +1,7 @@
 package com.infinity8.compose_button_framework.render
 
 import android.graphics.Canvas
+import android.view.Choreographer
 import com.infinity8.compose_button_framework.layout.Constraints
 import com.infinity8.compose_button_framework.node.LayoutNode
 import com.infinity8.compose_button_framework.node.RootNode
@@ -8,6 +9,9 @@ import com.infinity8.compose_button_framework.node.RootNode
 class Renderer {
 
     private lateinit var rootNode: RootNode
+
+    private val choreographer =
+        Choreographer.getInstance()
 
     /**
      * Node that consumed the current ACTION_DOWN.
@@ -17,17 +21,82 @@ class Renderer {
      */
     private var pressedNode: LayoutNode? = null
 
+    /**
+     * Callback provided by the Android View/Compose layer.
+     *
+     * Renderer calls this whenever a new frame
+     * needs to be rendered.
+     */
+    private var invalidateCallback: (() -> Unit)? = null
+
+    /**
+     * Prevents scheduling multiple Choreographer
+     * callbacks for the same frame.
+     */
+    private var frameScheduled = false
+
     var measuredWidth = 0f
         private set
 
     var measuredHeight = 0f
         private set
 
+    private val frameCallback =
+        Choreographer.FrameCallback { frameTimeNanos ->
+
+            frameScheduled = false
+
+            if (!::rootNode.isInitialized) {
+                return@FrameCallback
+            }
+
+            val stillAnimating =
+                rootNode.updateAnimations(
+                    frameTimeNanos
+                )
+
+            // Draw the current frame.
+            invalidateCallback?.invoke()
+
+            // Continue only if an animation is active.
+            if (stillAnimating) {
+                scheduleFrame()
+            }
+        }
+
+    fun setInvalidateCallback(
+        callback: () -> Unit
+    ) {
+        invalidateCallback = callback
+    }
+
     fun setRoot(
         root: RootNode
     ) {
         pressedNode = null
+
         rootNode = root
+
+        root.setInvalidateCallback {
+            scheduleFrame()
+        }
+    }
+
+    private fun scheduleFrame() {
+
+        if (frameScheduled) {
+            return
+        }
+
+        if (!::rootNode.isInitialized) {
+            return
+        }
+
+        frameScheduled = true
+
+        choreographer.postFrameCallback(
+            frameCallback
+        )
     }
 
     fun measure(
@@ -64,17 +133,16 @@ class Renderer {
             return false
         }
 
-        // Cancel any stale gesture.
         val previousNode = pressedNode
         pressedNode = null
 
         previousNode?.onTouchCancel()
 
-        // Find the actual interactive node.
-        val target = rootNode.findTouchTarget(
-            x = x,
-            y = y
-        ) ?: return false
+        val target =
+            rootNode.findTouchTarget(
+                x = x,
+                y = y
+            ) ?: return false
 
         pressedNode = target
 
@@ -132,5 +200,20 @@ class Renderer {
         }
 
         rootNode.draw(canvas)
+    }
+
+    fun dispose() {
+
+        if (frameScheduled) {
+
+            choreographer.removeFrameCallback(
+                frameCallback
+            )
+
+            frameScheduled = false
+        }
+
+        pressedNode = null
+        invalidateCallback = null
     }
 }

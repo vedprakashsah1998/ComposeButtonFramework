@@ -1,6 +1,5 @@
 package com.infinity8.compose_button_framework.node
 
-import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -8,7 +7,6 @@ import android.graphics.Paint
 import android.graphics.RadialGradient
 import android.graphics.Shader
 import android.graphics.SweepGradient
-import android.view.animation.DecelerateInterpolator
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
@@ -18,12 +16,12 @@ import com.infinity8.compose_button_framework.TextOverflow
 import com.infinity8.compose_button_framework.extension.resolvePadding
 import com.infinity8.compose_button_framework.extension.resolveSize
 import com.infinity8.compose_button_framework.gradient.ButtonGradient
-
 import com.infinity8.compose_button_framework.layout.Constraints
 import com.infinity8.compose_button_framework.layout.MeasureResult
 import com.infinity8.compose_button_framework.layout.PaddingValues
 import com.infinity8.compose_button_framework.modifier.Modifier
 import com.infinity8.compose_button_framework.modifier.ModifierChain
+import com.infinity8.compose_button_framework.modifier.SizeModifier
 import com.infinity8.compose_button_framework.modifier.SizeValue
 import com.infinity8.compose_button_framework.resource.FontFamilyResolver
 import com.infinity8.compose_button_framework.resource.FontStyle
@@ -69,8 +67,50 @@ class ButtonNode(
     private var isPressed = false
 
     private var currentScale = 1f
-    private var pressAnimator: ValueAnimator? = null
     private var currentAlpha = 1f
+    private val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+
+    // Cached shadow values.
+    private var shadowAlpha = 0
+    private var shadowBlurPx = 0f
+    private var shadowOffsetYPx = 0f
+    private var animationStartTimeNanos = 0L
+    private var animationDurationNanos = 0L
+
+    private var animationStartScale = 1f
+    private var animationTargetScale = 1f
+
+    private var animationStartAlpha = 1f
+    private var animationTargetAlpha = 1f
+
+    private var isAnimating = false
+
+    private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+    }
+
+    // Cached button geometry in px.
+    private var buttonX = 0f
+    private var buttonY = 0f
+    private var buttonWidth = 0f
+    private var buttonHeight = 0f
+
+    private var centerX = 0f
+    private var centerY = 0f
+
+    // Cached visual values in px.
+    private var cornerRadiusPx = 0f
+    private var borderWidthPx = 0f
+    private var elevationPx = 0f
+
+    // Cached gradient.
+    private var cachedGradient: ButtonGradient? = null
+    private var cachedGradientWidth = 0f
+    private var cachedGradientHeight = 0f
+    private var cachedGradientShader: Shader? = null
+
     private val textNode = TextNode(
         text = text,
         textColor = textColor,
@@ -82,6 +122,10 @@ class ButtonNode(
         overflow = overflow,
         isUpperCase = isUpperCase
     )
+
+    init {
+        addChild(textNode)
+    }
 
     private fun updateTextNode() {
         textNode.textSize = textSize
@@ -103,36 +147,120 @@ class ButtonNode(
     private fun animateTo(
         targetScale: Float,
         targetAlpha: Float,
-        duration: Long
+        durationMillis: Long
     ) {
-        pressAnimator?.cancel()
 
-        val startScale = currentScale
-        val startAlpha = currentAlpha
+        animationStartScale = currentScale
+        animationTargetScale = targetScale
 
-        pressAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+        animationStartAlpha = currentAlpha
+        animationTargetAlpha = targetAlpha
 
-            this.duration = duration
+        animationDurationNanos =
+            durationMillis * 1_000_000L
 
-            interpolator = DecelerateInterpolator()
+        animationStartTimeNanos =
+            System.nanoTime()
 
-            addUpdateListener { animator ->
+        isAnimating = true
 
-                val progress = animator.animatedValue as Float
+        requestRedraw()
+    }
 
-                currentScale =
-                    startScale +
-                            (targetScale - startScale) * progress
+    override fun updateAnimations(
+        frameTimeNanos: Long
+    ): Boolean {
 
-                currentAlpha =
-                    startAlpha +
-                            (targetAlpha - startAlpha) * progress
+        if (!isAnimating) {
+            return super.updateAnimations(
+                frameTimeNanos
+            )
+        }
 
-                requestRedraw()
+        val elapsedNanos =
+            frameTimeNanos -
+                    animationStartTimeNanos
+
+        val progress =
+            if (animationDurationNanos <= 0L) {
+                1f
+            } else {
+                (elapsedNanos.toFloat() / animationDurationNanos.toFloat()).coerceIn(0f, 1f)
             }
 
-            start()
+        val easedProgress =
+            easeOutCubic(progress)
+
+        currentScale =
+            animationStartScale +
+                    (
+                            animationTargetScale -
+                                    animationStartScale
+                            ) * easedProgress
+
+        currentAlpha =
+            animationStartAlpha +
+                    (
+                            animationTargetAlpha -
+                                    animationStartAlpha
+                            ) * easedProgress
+
+        if (progress >= 1f) {
+            currentScale = animationTargetScale
+
+            currentAlpha = animationTargetAlpha
+
+            isAnimating = false
         }
+
+        textNode.alpha = currentAlpha
+
+        val childAnimating =
+            super.updateAnimations(
+                frameTimeNanos
+            )
+
+        return isAnimating || childAnimating
+    }
+
+    private fun easeOutCubic(
+        progress: Float
+    ): Float {
+
+        val inverse =
+            1f - progress
+
+        return 1f -
+                inverse * inverse * inverse
+    }
+
+    private fun getGradientShader(): Shader? {
+
+        val currentGradient = gradient
+            ?: return null
+
+        if (
+            cachedGradient === currentGradient &&
+            cachedGradientWidth == buttonWidth &&
+            cachedGradientHeight == buttonHeight
+        ) {
+            return cachedGradientShader
+        }
+
+        val shader = createGradientShader(
+            gradient = currentGradient,
+            buttonX = buttonX,
+            buttonY = buttonY,
+            buttonWidth = buttonWidth,
+            buttonHeight = buttonHeight
+        )
+
+        cachedGradient = currentGradient
+        cachedGradientWidth = buttonWidth
+        cachedGradientHeight = buttonHeight
+        cachedGradientShader = shader
+
+        return shader
     }
 
     private fun createGradientShader(
@@ -146,7 +274,6 @@ class ButtonNode(
         return when (gradient) {
 
             is ButtonGradient.Horizontal -> {
-
                 LinearGradient(
                     buttonX + buttonWidth * gradient.startX,
                     buttonY,
@@ -159,7 +286,6 @@ class ButtonNode(
             }
 
             is ButtonGradient.Vertical -> {
-
                 LinearGradient(
                     buttonX,
                     buttonY + buttonHeight * gradient.startY,
@@ -172,7 +298,6 @@ class ButtonNode(
             }
 
             is ButtonGradient.Diagonal -> {
-
                 LinearGradient(
                     buttonX + buttonWidth * gradient.startX,
                     buttonY + buttonHeight * gradient.startY,
@@ -185,7 +310,6 @@ class ButtonNode(
             }
 
             is ButtonGradient.Radial -> {
-
                 RadialGradient(
                     buttonX + buttonWidth * gradient.centerX,
                     buttonY + buttonHeight * gradient.centerY,
@@ -197,7 +321,6 @@ class ButtonNode(
             }
 
             is ButtonGradient.Sweep -> {
-
                 SweepGradient(
                     buttonX + buttonWidth * gradient.centerX,
                     buttonY + buttonHeight * gradient.centerY,
@@ -208,17 +331,6 @@ class ButtonNode(
         }
     }
 
-    private val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-    }
-
-    init {
-        addChild(textNode)
-    }
-
-    private val backgroundPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-    }
 
     override fun onTouchDown(
         x: Float,
@@ -265,10 +377,11 @@ class ButtonNode(
 
         isPressed = true
 
+
         animateTo(
-            targetScale = 0.96f,
-            targetAlpha = 0.92f,
-            duration = 100L
+            targetScale = 0.97f,
+            targetAlpha = 0.94f,
+            durationMillis = 50L
         )
     }
 
@@ -281,7 +394,7 @@ class ButtonNode(
         animateTo(
             targetScale = 1f,
             targetAlpha = 1f,
-            duration = 160L
+            durationMillis = 120L
         )
 
         onClick.invoke()
@@ -296,7 +409,7 @@ class ButtonNode(
         animateTo(
             targetScale = 1f,
             targetAlpha = 1f,
-            duration = 120L
+            durationMillis = 90L
         )
     }
 
@@ -319,50 +432,59 @@ class ButtonNode(
 
         val childResult = textNode.measure(constraints)
         val buttonWidth =
-            childResult.width +
-                    contentPadding.start.toPx() +
-                    contentPadding.end.toPx()
+            childResult.width + contentPadding.start.toPx() + contentPadding.end.toPx()
 
         val buttonHeight =
-            childResult.height +
-                    contentPadding.top.toPx() +
-                    contentPadding.bottom.toPx()
-        width = when (val value = size.width) {
+            childResult.height + contentPadding.top.toPx() + contentPadding.bottom.toPx()
 
-            is SizeValue.Fixed ->
-                value.dp.toPx()
+        width = buttonWidthImpl(size, constraints, buttonWidth, outerPadding)
 
-            SizeValue.FillMax ->
-                constraints.maxWidth
-
-            is SizeValue.FillFraction ->
-                constraints.maxWidth * value.fraction
-
-            SizeValue.WrapContent, null ->
-                buttonWidth +
-                        outerPadding.start.toPx() +
-                        outerPadding.end.toPx()
-        }
-
-        height = when (val value = size.height) {
-
-            is SizeValue.Fixed ->
-                value.dp.toPx()
-
-            SizeValue.FillMax ->
-                constraints.maxHeight
-
-            is SizeValue.FillFraction ->
-                constraints.maxHeight * value.fraction
-
-            SizeValue.WrapContent, null ->
-                buttonHeight +
-                        outerPadding.top.toPx() +
-                        outerPadding.bottom.toPx()
-        }
+        height = buttonHeightImpl(size, constraints, buttonHeight, outerPadding)
 
 
         return MeasureResult(width, height)
+    }
+
+    private fun buttonHeightImpl(
+        size: SizeModifier,
+        constraints: Constraints,
+        buttonHeight: Float,
+        outerPadding: PaddingValues
+    ): Float = when (val value = size.height) {
+
+        is SizeValue.Fixed ->
+            value.dp.toPx()
+
+        SizeValue.FillMax ->
+            constraints.maxHeight
+
+        is SizeValue.FillFraction ->
+            constraints.maxHeight * value.fraction
+
+        SizeValue.WrapContent, null ->
+            buttonHeight + outerPadding.top.toPx() + outerPadding.bottom.toPx()
+    }
+
+    private fun buttonWidthImpl(
+        size: SizeModifier,
+        constraints: Constraints,
+        buttonWidth: Float,
+        outerPadding: PaddingValues
+    ): Float = when (val value = size.width) {
+
+        is SizeValue.Fixed ->
+            value.dp.toPx()
+
+        SizeValue.FillMax ->
+            constraints.maxWidth
+
+        is SizeValue.FillFraction ->
+            constraints.maxWidth * value.fraction
+
+        SizeValue.WrapContent, null ->
+            buttonWidth +
+                    outerPadding.start.toPx() +
+                    outerPadding.end.toPx()
     }
 
 
@@ -371,18 +493,80 @@ class ButtonNode(
         val child = textNode
         val outerPadding = modifier.resolvePadding()
 
-        val buttonX = x + outerPadding.start.toPx()
-        val buttonY = y + outerPadding.top.toPx()
-        val buttonWidth =
+        val paddingStartPx = outerPadding.start.toPx()
+        val paddingTopPx = outerPadding.top.toPx()
+        val paddingEndPx = outerPadding.end.toPx()
+        val paddingBottomPx = outerPadding.bottom.toPx()
+
+        buttonX = x + paddingStartPx
+        buttonY = y + paddingTopPx
+
+        buttonWidth =
             width -
-                    outerPadding.start.toPx() -
-                    outerPadding.end.toPx()
+                    paddingStartPx -
+                    paddingEndPx
 
-        val buttonHeight =
+        buttonHeight =
             height -
-                    outerPadding.top.toPx() -
-                    outerPadding.bottom.toPx()
+                    paddingTopPx -
+                    paddingBottomPx
 
+        centerX =
+            buttonX +
+                    buttonWidth / 2f
+
+        centerY =
+            buttonY +
+                    buttonHeight / 2f
+
+        cornerRadiusPx =
+            cornerRadius.toPx()
+
+        elevationPx =
+            elevation.toPx()
+        borderWidthPx =
+            borderWidth.toPx()
+
+        shadowOffsetYPx =
+            elevationPx * 0.75f
+
+        shadowBlurPx =
+            elevationPx * 2f
+
+        shadowAlpha =
+            (elevationPx * 8f)
+                .coerceAtMost(60f)
+                .toInt()
+
+
+
+        contentAlignmentImpl(
+            child = child,
+            buttonX = buttonX,
+            buttonWidth = buttonWidth
+        )
+
+        child.y =
+            buttonY +
+                    (buttonHeight - child.height) / 2f
+
+        child.layout()
+
+        invalidateGradientCache()
+    }
+
+    private fun invalidateGradientCache() {
+        cachedGradient = null
+        cachedGradientWidth = 0f
+        cachedGradientHeight = 0f
+        cachedGradientShader = null
+    }
+
+    private fun contentAlignmentImpl(
+        child: TextNode,
+        buttonX: Float,
+        buttonWidth: Float
+    ) {
         when (contentAlignment) {
 
             Alignment.Start -> {
@@ -394,17 +578,11 @@ class ButtonNode(
             }
 
             Alignment.End -> {
-                child.x =
-                    buttonX +
-                            buttonWidth -
-                            child.width -
-                            contentPadding.end.toPx()
+                child.x = buttonX + buttonWidth - child.width - contentPadding.end.toPx()
             }
         }
-
-        child.y = buttonY + (buttonHeight - child.height) / 2f
-        child.layout()
     }
+
     override fun findTouchTarget(
         x: Float,
         y: Float
@@ -419,101 +597,26 @@ class ButtonNode(
             null
         }
     }
-    override fun draw(canvas: Canvas) {
-        val elevationPx = elevation.toPx()
-        val outerPadding = modifier.resolvePadding()
 
-        val buttonX = x + outerPadding.start.toPx()
-        val buttonY = y + outerPadding.top.toPx()
+    override fun draw(
+        canvas: Canvas
+    ) {
+
         canvas.save()
 
-
-        val buttonWidth =
-            width -
-                    outerPadding.start.toPx() -
-                    outerPadding.end.toPx()
-
-        val buttonHeight =
-            height -
-                    outerPadding.top.toPx() -
-                    outerPadding.bottom.toPx()
-        val centerX = buttonX + buttonWidth / 2f
-        val centerY = buttonY + buttonHeight / 2f
         canvas.scale(
             currentScale,
             currentScale,
             centerX,
             centerY
         )
-        if (elevationPx > 0f) {
 
-            // Convert elevation into shadow properties
-            val shadowOffsetY = elevationPx * 0.75f
-            val shadowBlur = elevationPx * 2f
-            val shadowAlpha = (elevationPx * 8).coerceAtMost(60f).toInt()
+        drawElevation(canvas)
 
-            shadowPaint.color = Color.argb(
-                shadowAlpha,
-                0,
-                0,
-                0
-            )
-
-            shadowPaint.setShadowLayer(
-                shadowBlur,
-                0f,
-                shadowOffsetY,
-                shadowPaint.color
-            )
-
-            canvas.drawRoundRect(
-                buttonX,
-                buttonY,
-                buttonX + buttonWidth,
-                buttonY + buttonHeight,
-                cornerRadius.toPx(),
-                cornerRadius.toPx(),
-                shadowPaint
-            )
-
-            shadowPaint.clearShadowLayer()
-        }
-
-
-        when (style) {
-            ButtonStyle.Filled -> {
-                backgroundPaint.style = Paint.Style.FILL
-                if (enabled && gradient != null) {
-                    backgroundPaint.shader = createGradientShader(
-                        gradient = gradient,
-                        buttonX = buttonX,
-                        buttonY = buttonY,
-                        buttonWidth = buttonWidth,
-                        buttonHeight = buttonHeight
-                    )
-                } else {
-                    backgroundPaint.shader = null
-                    backgroundPaint.color =
-                        if (enabled)
-                            backgroundColor
-                        else
-                            disabledBackgroundColor
-                }
-            }
-
-            ButtonStyle.Outlined -> {
-                backgroundPaint.style = Paint.Style.STROKE
-                backgroundPaint.strokeWidth = borderWidth.toPx()
-                backgroundPaint.color =
-                    if (enabled)
-                        borderColor
-                    else
-                        disabledBorderColor
-            }
-        }
+        setupBackgroundPaint()
 
         backgroundPaint.alpha =
-            (255 * currentAlpha)
+            (255f * currentAlpha)
                 .toInt()
                 .coerceIn(0, 255)
 
@@ -522,15 +625,99 @@ class ButtonNode(
             buttonY,
             buttonX + buttonWidth,
             buttonY + buttonHeight,
-            cornerRadius.toPx(),
-            cornerRadius.toPx(),
+            cornerRadiusPx,
+            cornerRadiusPx,
             backgroundPaint
         )
-        textNode.alpha = currentAlpha
 
-        backgroundPaint.shader = null
+
         textNode.draw(canvas)
+
         canvas.restore()
+    }
+
+
+    private fun setupBackgroundPaint() {
+
+        when (style) {
+
+            ButtonStyle.Filled -> {
+
+                backgroundPaint.style =
+                    Paint.Style.FILL
+
+                if (enabled && gradient != null) {
+
+                    backgroundPaint.shader =
+                        getGradientShader()
+
+                } else {
+
+                    backgroundPaint.shader = null
+
+                    backgroundPaint.color =
+                        if (enabled) {
+                            backgroundColor
+                        } else {
+                            disabledBackgroundColor
+                        }
+                }
+            }
+
+            ButtonStyle.Outlined -> {
+
+                backgroundPaint.shader = null
+
+                backgroundPaint.style =
+                    Paint.Style.STROKE
+
+                backgroundPaint.strokeWidth =
+                    borderWidthPx
+
+                backgroundPaint.color =
+                    if (enabled) {
+                        borderColor
+                    } else {
+                        disabledBorderColor
+                    }
+            }
+        }
+    }
+
+    private fun drawElevation(
+        canvas: Canvas
+    ) {
+
+        if (elevationPx <= 0f) {
+            return
+        }
+
+        shadowPaint.color =
+            Color.argb(
+                shadowAlpha,
+                0,
+                0,
+                0
+            )
+
+        shadowPaint.setShadowLayer(
+            shadowBlurPx,
+            0f,
+            shadowOffsetYPx,
+            shadowPaint.color
+        )
+
+        canvas.drawRoundRect(
+            buttonX,
+            buttonY,
+            buttonX + buttonWidth,
+            buttonY + buttonHeight,
+            cornerRadiusPx,
+            cornerRadiusPx,
+            shadowPaint
+        )
+
+        shadowPaint.clearShadowLayer()
     }
 }
 
