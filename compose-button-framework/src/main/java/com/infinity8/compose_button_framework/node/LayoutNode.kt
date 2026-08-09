@@ -40,12 +40,26 @@ abstract class LayoutNode {
     }
 
     /**
-     * Handles ACTION_DOWN.
+     * Updates animations for this node and its children.
      *
-     * Container nodes recursively search their children.
-     * Interactive nodes such as ButtonNode override this
-     * and consume the event.
+     * @return true when at least one animation is still running.
      */
+    open fun updateAnimations(
+        frameTimeNanos: Long
+    ): Boolean {
+
+        var animating = false
+
+        children.forEach { child ->
+
+            if (child.updateAnimations(frameTimeNanos)) {
+                animating = true
+            }
+        }
+
+        return animating
+    }
+
     open fun onTouchDown(
         x: Float,
         y: Float
@@ -150,6 +164,7 @@ abstract class LayoutNode {
             moved
         )
     }
+
     open fun findTouchTarget(
         x: Float,
         y: Float
