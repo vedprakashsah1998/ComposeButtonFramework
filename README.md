@@ -186,7 +186,7 @@ The library lives in the `:compose-button-framework` Gradle module. Include it i
 
 //app/build.gradle.kts
 dependencies {
-	        implementation 'com.github.vedprakashsah1998:ComposeButtonFramework:1.0.5'
+	        implementation 'com.github.vedprakashsah1998:ComposeButtonFramework:1.0.6'
 	}
 ```
 
@@ -197,12 +197,11 @@ import com.infinity8.mini_compose.runtime.MiniCompose
 import com.infinity8.mini_compose.widget.Button
 
 setContent {
-    MiniCompose {
-        Button(
+        ComposeButton(
             text = "Get Started",
             onClick = { println("Clicked!") }
         )
-    }
+    
 }
 ```
 
@@ -214,7 +213,7 @@ import androidx.core.graphics.toColorInt
 import com.infinity8.mini_compose.modifier.Modifier
 import com.infinity8.mini_compose.node.ButtonStyle
 
-Button(
+ComposeButton(
     text = "Outlined",
     modifier = Modifier.fillMaxWidth(),
     style = ButtonStyle.Outlined,
