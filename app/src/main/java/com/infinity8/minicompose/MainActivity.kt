@@ -45,6 +45,7 @@ import com.infinity8.compose_button_framework.node.ButtonStyle
 import com.infinity8.compose_button_framework.node.colorResource
 import com.infinity8.compose_button_framework.runtime.MiniCompose
 import com.infinity8.compose_button_framework.widget.Button
+import com.infinity8.compose_button_framework.widget.ComposeButton
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -151,8 +152,8 @@ class MainActivity : ComponentActivity() {
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
-                MiniCompose {
-                    Button(
+
+                    ComposeButton(
                         text = "Login",
                         modifier = com.infinity8.compose_button_framework.modifier.Modifier
                             .fillMaxWidth().height(56.dp).padding(horizontal = 64.dp),
@@ -163,15 +164,15 @@ class MainActivity : ComponentActivity() {
                         fontFamily = FontFamily.Resource(R.font.tccc_unitytext_bold),
                         fontWeight = com.infinity8.compose_button_framework.FontWeight.Bold,
                         onClick = {}
-
                     )
-                }
+
+
 
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                MiniCompose {
-                    Button(
+
+                    ComposeButton(
                         text = "Create Account",
                         modifier = com.infinity8.compose_button_framework.modifier.Modifier
                             .fillMaxWidth().height(56.dp).padding(horizontal = 32.dp),
@@ -181,9 +182,8 @@ class MainActivity : ComponentActivity() {
                         textColor = "#2962FF".toColorInt(),
                         cornerRadius = 16.dp,
                         onClick = {}
-
                     )
-                }
+
 
 
                 Spacer(modifier = Modifier.height(24.dp))
