@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">MiniCompose</string>
+    <string name="having_trouble_lbl">Having trouble?</string>
+    <string name="get_help_signing_in_lbl">Get help signing in!</string>
+    <string name="signup_body_lbl">If you are an existing Coca-Cola Customer you might already be eligible.</string>
+    <string name="sign_up_btn">Sign Up Now</string>
+    <string name="welcome_subtitle_lbl">Please log in to your myCoke account to unlock all app features</string>
+    <string name="sign_in_as_guest_btn">Sign In As Guest</string>
+    <string name="want_to_sign_up_lbl">Want to sign up?</string>
+    <string name="sign_in_title">Sign In</string>
+    <string name="dashboard_welcome_to_my_coke_title">Welcome to myCoke!</string>
+
 </resources>

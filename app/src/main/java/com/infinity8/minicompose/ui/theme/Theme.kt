@@ -2,6 +2,8 @@ package com.infinity8.minicompose.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.LocalOverscrollFactory
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -9,13 +11,42 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import com.infinity8.minicompose.R
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
+val appFontFamily = FontFamily(
+    Font(R.font.tccc_unitytext_regular, FontWeight.Normal),
+    Font(R.font.tccc_unitytext_medium, FontWeight.Medium),
+    Font(R.font.tccc_unitytext_bold, FontWeight.Bold),
+    Font(R.font.tccc_unitytext_italic, FontWeight.Normal, style = FontStyle.Italic),
+)
+
+// Font Family  for the app
+val appFontHeadLine = FontFamily(
+    Font(R.font.tccc_unityheadline_black, FontWeight.Black),
+    Font(R.font.tccc_unityheadline_bold, FontWeight.Bold),
+    Font(R.font.tccc_unityheadline_light, FontWeight.Light),
+    Font(R.font.tccc_unityheadline_medium, FontWeight.Medium),
+    Font(R.font.tccc_unityheadline_regular, FontWeight.Normal)
+)
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MCAppTheme(content: @Composable () -> Unit) {
+    MaterialTheme {
+        CompositionLocalProvider(LocalOverscrollFactory provides null, content = content)
+    }
+}
+
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,

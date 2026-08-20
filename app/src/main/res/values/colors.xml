@@ -9,4 +9,185 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gradient_start">#FF2962FF</color>
     <color name="gradient_end">#FF7C4DFF</color>
+
+
+    <color name="transparent">#00000000</color>
+    <color name="white_40">#66FFFFFF</color>
+    <color name="white_60">#99FFFFFF</color>
+    <color name="black_transparent">#11000000</color>
+    <color name="gray_darker">@android:color/darker_gray</color>
+    <color name="gray_silver">#cccccc</color>
+    <color name="dot_colors">#A6A6A6</color>
+    <color name="gray_dusty">#9B9B9B</color>
+    <color name="black_shaft">#222222</color>
+    <color name="green_laurel">#009900</color>
+    <color name="green_malachite">#1BCF1B</color>
+    <color name="green_light">#f5fdff</color>
+    <color name="gray_tuna">#3f4044</color>
+    <color name="red">#ff0000</color>
+    <color name="wood_smoke">#171819</color>
+    <color name="tundora">#4A4A4A</color>
+    <color name="yellow_lemon">#F8D51C</color>
+    <color name="yellow_orange">#FCB135</color>
+    <color name="yellow_overdue">#F79021</color>
+    <color name="mc_red">#e3212b</color>
+    <color name="milano">#c31a00</color>
+    <color name="mc_grey_silver">#BEBEBE</color>
+    <color name="mc_grey_gallery">#F0F0F0</color>
+    <color name="mc_grey_disabled">#50F0F0F0</color>
+    <color name="mc_grey_border">#d8d8d8</color>
+    <color name="mc_grey_24">#3d3d3d</color>
+    <color name="gray_icon">#8A000000</color>
+    <color name="mc_grey_8">#8A8A8A</color>
+    <color name="mc_light_gray">#e3e3e3</color>
+    <color name="mc_light_grey_silver">#EBEBEB</color>
+    <color name="wild_sand">#F5F5F5</color>
+    <color name="alabaster">#F9F9F9</color>
+    <color name="monza">#D0021B</color>
+    <color name="azalea">#14E3212B</color>
+    <color name="medium_gray">#979797</color>
+    <color name="charcoal">#4a4a4a</color>
+    <color name="dim_gray">#6f6f6f</color>
+    <color name="dim_gray_2">#727272</color>
+    <color name="persian_green">#00af96</color>
+    <color name="bold_green">#00961a</color>
+    <color name="lone_star_transparent">#66000000</color>
+    <color name="blue_link">#3b5ad9</color>
+    <color name="pippin">#FFEBEB</color>
+    <color name="coke_red">#F40000</color>
+    <color name="mercury">#E9E9E9</color>
+    <color name="mc_dim_gray">#696969</color>
+    <color name="spanish_gray">#9C9C9C</color>
+    <color name="mc_scale_black">#18181A</color>
+
+    <!-- USE THIS colors in components -->
+    <color name="back_ground_status_bar">@color/black</color>
+    <color name="back_ground_toolbar">@color/white</color>
+    <color name="back_ground_screen">@color/white</color>
+    <color name="text_high_contrast">@color/black</color>
+    <color name="pager_indicator_on">@color/white</color>
+    <color name="pager_indicator_off">@color/black_shaft</color>
+    <color name="validation_correct">@color/green_laurel</color>
+    <color name="alert_background">@color/white</color>
+    <color name="mycoke_bottom_nav_background">@color/white</color>
+    <color name="bottom_nav_item_color">@color/white_40</color>
+    <color name="mc_bottom_nav_item_color">@color/mc_grey_8</color>
+    <color name="mc_bottom_nav_item_color_selected">@color/black</color>
+    <color name="card_border_color">@color/mc_light_grey_silver</color>
+    <color name="card_available">@color/black</color>
+    <color name="card_ingredient_name">@color/black</color>
+    <color name="card_cartridge_pump_text_color">@color/tundora</color>
+    <color name="card_cartridge_remaining_percentage_color">@color/gray_dusty</color>
+    <color name="card_cartridge_remaining_color">@color/tundora</color>
+
+    <color name="about_item_title">@color/mc_grey_24</color>
+    <color name="about_item_value">@color/gray_dusty</color>
+
+    <color name="item_divider">@color/wood_smoke</color>
+    <color name="radio_button">@color/white</color>
+
+    <color name="mc_edit_text_color_text">@color/black</color>
+    <color name="mc_text_alert_color">@color/mc_red</color>
+    <color name="mc_button_text_color">@color/white</color>
+    <color name="mc_button_background_color">@color/black</color>
+    <color name="mc_button__disabled_background_color">@color/mc_grey_silver</color>
+
+    <color name="mc_back_ground_screen">@color/white</color>
+    <color name="mc_text_high_contrast">@color/black</color>
+    <color name="mc_navigation_bar_color">@color/white</color>
+
+    <color name="mc_text_field_background_color">@color/white</color>
+    <color name="mc_text_field_border_color">@color/mc_grey_silver</color>
+    <color name="mc_password_icon_color">@color/mc_grey_silver</color>
+
+    <color name="mc_back_button_toolbar">@color/black</color>
+
+    <color name="mc_background_color">@color/white</color>
+    <color name="mc_order_builder_address_color">@color/tundora</color>
+
+    <color name="loading_background">@color/white_60</color>
+
+    <color name="address_list_background">@color/white</color>
+    <color name="address_list_background_selected">@color/mc_grey_gallery</color>
+    <color name="coke_logo_red">#E3212B</color>
+
+    <color name="dashboard_background">@color/mc_grey_gallery</color>
+
+    <color name="mc_nav_drawer_background">@color/white</color>
+    <color name="mc_nav_drawer_bottom_background">@color/mc_grey_gallery</color>
+    <color name="mc_item_divider">@color/mc_grey_border</color>
+    <color name="mc_text_color_dark_grey">@color/tundora</color>
+    <color name="ingredient_background_item">@color/mc_light_gray</color>
+
+    <color name="mc_about_list_background">@color/mc_grey_gallery</color>
+    <color name="mc_order_detail_background">@color/mc_grey_gallery</color>
+    <color name="mc_settings_background">@color/mc_grey_gallery</color>
+
+    <color name="mc_review_order_background">@color/mc_grey_gallery</color>
+    <color name="mc_saving">@color/monza</color>
+
+    <color name="error_red">#B30000</color>
+    <color name="order_status_tab_selected">@color/mc_red</color>
+    <color name="order_status_tab_enabled">@color/black</color>
+    <color name="order_status_tab_disabled">@color/gray_dusty</color>
+
+    <color name="order_information_divider">@color/medium_gray</color>
+
+    <color name="ingredient_not_available">@color/gray_dusty</color>
+    <color name="ingredient_sold_out">@color/red</color>
+    <color name="ingredient_prime_needed">@color/yellow_orange</color>
+    <color name="ingredient_purge_needed">@color/yellow_orange</color>
+    <color name="snack_bar_red_bg">#F34C3F</color>
+    <color name="no_connection_device_not_connected">@color/mc_dim_gray</color>
+    <color name="underline_red">#E3123B</color>
+    <color name="klein_blue">#0033a1</color>
+    <color name="teal_blue">#6AC9CE</color>
+    <color name="light_green">#6ACE7F</color>
+    <color name="dark_green">#00953A</color>
+    <color name="light_red">#ef9a9a</color>
+    <color name="dark_red">#f44336</color>
+    <color name="slight_red">#fff5f5</color>
+    <color name="mc_grey_15">#1A000000</color>
+    <color name="dark_grey">#363636</color>
+    <color name="dark_black">#0d0d0d</color>
+    <color name="gray_70">#4D4C4C</color>
+    <color name="current_day">#E1E1E1</color>
+    <color name="divider_color">#E1E1E1</color>
+    <color name="calendar_day_out_of_current_month">#F0F0F0</color>
+    <color name="calendar_cell_divider">#F7F7F7</color>
+    <color name="catalog_edit_text_hint_color">#FF808080</color>
+    <color name="warning_yellow">#FFD100</color>
+    <color name="dispenser_header">#E5E5E5</color>
+    <color name="outlet_list_header_color">#EFEFEF</color>
+    <color name="secondary_gray_50">#9B9B9B</color>
+    <color name="light_yellow">#FFD100</color>
+    <color name="recommended_item">#F79900</color>
+    <color name="order_smart_item">#FF560E</color>
+    <color name="contractual_item">#B59E74</color>
+    <color name="tab_indicator_unselected">#D9D9D9</color>
+    <color name="progress_grey_indicator">#C4C4C4</color>
+    <color name="dropdown_background">#F6F6F6</color>
+    <color name="cross_icon_background">#AEAEB2</color>
+    <color name="text_gray">#6D6D72</color>
+    <color name="text_dark_gray">#3D3D3D</color>
+    <color name="text_button_white">#FDFDFD</color>
+    <color name="green_light_bg">#78E6A0</color>
+    <color name="sky_blue_light_bg">#82E1FF</color>
+    <color name="sky_blue_light_bg_with_alpha">#E7F1F5</color>
+    <color name="light_blue">#5DC8E9</color>
+    <color name="light_teal_blue">#82E1FF</color>
+    <color name="light_dimGray">#2C2C2C</color>
+    <color name="light_orange_yellow">#FFB400</color>
+    <color name="light_white_grey">#F2F2F2</color>
+    <color name="light_white_grey_border">#949494</color>
+    <color name="light_grey_white">#F2F2F2</color>
+    <color name="black_light">#0A0A0A</color>
+    <color name="light_yellow_strokes">#fff7e5</color>
+    <color name="light_black">#4f4f4f</color>
+    <color name="light_grey_black">#313131</color>
+
+    <color name="light_Shadow_grey">#4F4F4F</color>
+    <color name="light_orange">#FFA046</color>
+
+    <color name="grey_light">#4F4F4F</color>
 </resources>
